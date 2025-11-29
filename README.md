@@ -17,5 +17,3 @@ This is a starter full-stack project:
 
 Notes:
 - This is a starter template; extend it with DTOs, validations, and production hardening.
-
-UI + Spring boot app
