@@ -1,6 +1,7 @@
 package com.isquareinfo.portal.model;
 
-import javax.persistence.*;
+
+import jakarta.persistence.*;
 import lombok.*;
 import java.util.Set;
 

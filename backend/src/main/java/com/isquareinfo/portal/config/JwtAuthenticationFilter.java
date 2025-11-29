@@ -1,12 +1,13 @@
 package com.isquareinfo.portal.config;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import com.isquareinfo.portal.service.CustomUserDetailsService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 
