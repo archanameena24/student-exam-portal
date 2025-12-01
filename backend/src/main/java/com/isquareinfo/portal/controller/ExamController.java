@@ -15,6 +15,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/exams")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ExamController {
     @Autowired private ExamRepository examRepository;
     @Autowired private ExamAttemptRepository attemptRepository;

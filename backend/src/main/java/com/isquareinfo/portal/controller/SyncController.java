@@ -9,6 +9,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/sync")
+@CrossOrigin(origins = "http://localhost:3000")
 public class SyncController {
     @Autowired private ExamAttemptRepository attemptRepository;
 

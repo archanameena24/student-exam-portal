@@ -7,7 +7,7 @@ export default function Dashboard({ onLogout }) {
   const [takingExam, setTakingExam] = useState(null);
 
   useEffect(()=> {
-    API.get('/exams').then(r=>setExams(r.data)).catch(()=>setExams([]));
+    API.get('/api/exams').then(r=>setExams(r.data)).catch(()=>setExams([]));
   },[]);
 
   return (
