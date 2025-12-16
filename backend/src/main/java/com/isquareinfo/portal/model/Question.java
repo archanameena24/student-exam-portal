@@ -3,6 +3,8 @@ package com.isquareinfo.portal.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Entity
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class Question {
@@ -18,4 +20,7 @@ public class Question {
     private Integer marks = 1;
     private String topic;
     private String difficulty;
+
+    @ManyToMany(mappedBy = "questions")
+    private Set<Exam> exams;
 }

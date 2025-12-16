@@ -16,7 +16,12 @@ public class Exam {
     private Integer durationMinutes;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "exam_questions",
+            joinColumns = @JoinColumn(name = "exam_id"),
+            inverseJoinColumns = @JoinColumn(name = "questions_id")
+    )
     private Set<Question> questions;
     private Boolean allowOffline = false;
 }

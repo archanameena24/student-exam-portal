@@ -13,4 +13,10 @@ public class Answer {
     private String selectedOption; // "A","B","C","D"
     private Integer marksAwarded;
     private Boolean isCorrect;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "exam_attempt_id", nullable = false)
+    private ExamAttempt examAttempt;
+
+
 }

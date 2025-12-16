@@ -1,11 +1,17 @@
 package com.isquareinfo.portal.controller;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.isquareinfo.portal.repository.UserRepository;
 import com.isquareinfo.portal.model.User;
 import com.isquareinfo.portal.config.JwtTokenProvider;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.HashMap;
 import java.util.Set;
 import java.util.Map;
 
@@ -22,7 +28,7 @@ public class AuthController {
         String username = body.get("username");
         String password = body.get("password");
         String name = body.getOrDefault("fullName", username);
-        String role = body.getOrDefault("role", "ROLE_STUDENT");
+        String role = body.getOrDefault("role", "STUDENT");
 
         if (userRepository.findByUsername(username).isPresent()) {
             return Map.of("error", "username_exists");
@@ -48,5 +54,20 @@ public class AuthController {
         }
         String token = tokenProvider.generateToken(username);
         return Map.of("token", token, "username", username);
+    }
+    @GetMapping("/user-info")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal UserDetails userDetails) {
+        Map<String, Object> userInfo = new HashMap<>();
+        userInfo.put("username", userDetails.getUsername());
+
+        // Get the role without the "ROLE_" prefix
+        String role = userDetails.getAuthorities().stream()
+                .map(authority -> authority.getAuthority().replace("ROLE_", ""))
+                .findFirst()
+                .orElse("");
+
+        userInfo.put("role",role);
+        return ResponseEntity.ok(userInfo);
     }
 }

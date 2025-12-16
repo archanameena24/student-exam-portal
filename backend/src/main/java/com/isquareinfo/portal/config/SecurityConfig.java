@@ -1,9 +1,11 @@
 package com.isquareinfo.portal.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.*;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -42,13 +44,29 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**","/auth/login", "/auth/register").permitAll()
-                        .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "FACULTY")
+                        .requestMatchers("/api/exams/**").hasAnyAuthority("ROLE_STUDENT","ROLE_ADMIN") // Changed to match exact role from DB
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                // Add exception handling to see what's causing 403
+                .exceptionHandling(handling -> handling
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            System.out.println("Access Denied Error:");
+                            System.out.println("Request URI: " + request.getRequestURI());
+                            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                            if (auth != null) {
+                                System.out.println("User: " + auth.getName());
+                                System.out.println("Authorities: " + auth.getAuthorities());
+                            }
+                            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");
+                        })
+                );
 
         return http.build();
     }
+
+
+
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

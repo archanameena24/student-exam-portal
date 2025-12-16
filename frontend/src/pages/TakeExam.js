@@ -10,7 +10,7 @@ export default function TakeExam({ attempt, onFinish }) {
   useEffect(()=> {
     async function load() {
       try {
-        const ex = await API.get(`/exams/${attempt.exam.id}`);
+        const ex = await API.get(`/api/exams/${attempt.exam.id}`);
         setExam(ex.data);
         setAnswers([]);
       } catch(e){ alert('Failed to load exam'); onFinish(); }
@@ -23,7 +23,7 @@ export default function TakeExam({ attempt, onFinish }) {
       const others = prev.filter(a=>a.questionId !== questionId);
       const next = [...others, { questionId, selectedOption: option }];
       // Try autosave
-      API.post(`/exams/attempt/${attempt.id}/autosave`, next).catch(()=>{
+      API.post(`/api/exams/attempt/${attempt.id}/autosave`, next).catch(()=>{
         const stored = JSON.parse(localStorage.getItem(OFFLINE_KEY) || '[]');
         stored.push({ attemptId: attempt.id, examId: attempt.exam.id, answers: next, username: attempt.student?.username });
         localStorage.setItem(OFFLINE_KEY, JSON.stringify(stored));
@@ -34,7 +34,7 @@ export default function TakeExam({ attempt, onFinish }) {
 
   async function finish() {
     try {
-      const res = await API.post(`/exams/attempt/${attempt.id}/finish`);
+      const res = await API.post(`/api/exams/attempt/${attempt.id}/finish`);
       alert("Finished. Score: " + res.data.score);
       onFinish();
     } catch (err) {
