@@ -28,7 +28,7 @@ public class AuthController {
         String username = body.get("username");
         String password = body.get("password");
         String name = body.getOrDefault("fullName", username);
-        String role = body.getOrDefault("role", "STUDENT");
+        String role = body.getOrDefault("role", "ROLE_STUDENT");
 
         if (userRepository.findByUsername(username).isPresent()) {
             return Map.of("error", "username_exists");
